@@ -31,12 +31,12 @@ This program uses vim-like bindings and mode-style menus
 
 **Insert mode**
 
-| Key     | Action            |
-| ------- | ----------------- |
-| `Esc`   | Enter normal mode |
-| `<CR>`  | Submit answer     |
-| `<C-BS> | Deletes last word |
-| `<C-w>` | Deletes last word |
+| Key      | Action            |
+| -------- | ----------------- |
+| `Esc`    | Enter normal mode |
+| `<CR>`   | Submit answer     |
+| `<C-BS>` | Deletes last word |
+| `<C-w>`  | Deletes last word |
 
 # TODO
 
