@@ -27,9 +27,8 @@ use unicode_width::UnicodeWidthStr;
 
 fn color_palette(color: &str) -> tui::style::Color {
     match color {
-        "bg" => Color::Black,
-        "fg" => Color::White,
-        "barbg" => Color::Blue,
+        "bg" => Color::Rgb(30, 30, 30),
+        "fg" => Color::Rgb(255, 255, 255),
         "red" => Color::Red,
         _ => Color::LightRed,
     }
@@ -167,8 +166,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let lbar = Paragraph::new(ltext.clone())
         .style(
             Style::default()
-                .bg(color_palette("barbg"))
-                .fg(color_palette("fg"))
+                .bg(color_palette("fg"))
+                .fg(color_palette("bg"))
         )
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
@@ -176,8 +175,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let rbar = Paragraph::new(rtext.clone())
         .style(
             Style::default()
-                .bg(color_palette("barbg"))
-                .fg(color_palette("fg"))
+                .bg(color_palette("fg"))
+                .fg(color_palette("bg"))
         )
         .alignment(Alignment::Right)
         .wrap(Wrap { trim: true });
