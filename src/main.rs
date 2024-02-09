@@ -162,7 +162,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     f.render_widget(contents, chunks[0]);
 
     // Bar
-    let ltext = format!( " {mode} <x> <y> <filled char> <bg char>", mode=app.mode);
+    let ltext = format!( " {mode}", mode=app.mode);
     let rtext = format!( "<filled char> <bg char> <x> <y> ");
     let lbar = Paragraph::new(ltext.clone())
         .style(
