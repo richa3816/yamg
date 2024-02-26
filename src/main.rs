@@ -19,20 +19,12 @@ use rand::{Rng};
 use tui::{
     backend::{Backend, CrosstermBackend},
     layout::{Alignment, Constraint, Direction, Layout},
-    style::{Color, Style},
+    //style::{Color, Style},
+    style::Style,
     widgets::{Paragraph, Wrap},
     Frame, Terminal,
 };
 use unicode_width::UnicodeWidthStr;
-
-fn color_palette(color: &str) -> tui::style::Color {
-    match color {
-        "bg" => Color::Rgb(30, 30, 30),
-        "fg" => Color::Rgb(255, 255, 255),
-        "red" => Color::Red,
-        _ => Color::LightRed,
-    }
-}
 
 enum Mode {
     Normal,
@@ -135,6 +127,8 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: App) -> io::Result<(
     }
 }
 
+mod color_palette;
+
 fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     // Layout
     let chunks = Layout::default()
@@ -153,8 +147,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let contents = Paragraph::new(
         format!("{submission}", submission=app.submission))
         .style(Style::default()
-               .bg(color_palette("bg"))
-               .fg(color_palette("fg"))
+               .bg(color_palette::BG)
+               .fg(color_palette::FG)
         )
         .alignment(Alignment::Left)
         .wrap(Wrap { trim:true });
@@ -166,8 +160,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let lbar = Paragraph::new(ltext.clone())
         .style(
             Style::default()
-                .bg(color_palette("fg"))
-                .fg(color_palette("bg"))
+                .bg(color_palette::FG)
+                .fg(color_palette::BG)
         )
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
@@ -175,8 +169,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let rbar = Paragraph::new(rtext.clone())
         .style(
             Style::default()
-                .bg(color_palette("fg"))
-                .fg(color_palette("bg"))
+                .bg(color_palette::FG)
+                .fg(color_palette::BG)
         )
         .alignment(Alignment::Right)
         .wrap(Wrap { trim: true });
@@ -196,8 +190,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let input_box = Paragraph::new(app.input_box.as_ref())
         .style(
             Style::default()
-           .bg(color_palette("bg"))
-           .fg(color_palette("fg"))
+           .bg(color_palette::BG)
+           .fg(color_palette::FG)
         );
     f.render_widget(input_box, chunks[2]);
 }
