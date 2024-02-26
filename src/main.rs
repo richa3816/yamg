@@ -19,7 +19,6 @@ use rand::{Rng};
 use tui::{
     backend::{Backend, CrosstermBackend},
     layout::{Alignment, Constraint, Direction, Layout},
-    //style::{Color, Style},
     style::Style,
     widgets::{Paragraph, Wrap},
     Frame, Terminal,
