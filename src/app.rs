@@ -29,3 +29,10 @@ impl Default for App {
     }
 }
 
+impl App {
+    pub fn delete_word(&mut self) {
+        let new_len = self.input_box.trim().len() - self.input_box.trim().split(' ').last().unwrap().len();
+        self.input_box.truncate(new_len);
+        self.input_box = String::from(self.input_box.trim());
+    }
+}

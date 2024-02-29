@@ -27,12 +27,6 @@ use unicode_width::UnicodeWidthStr;
 mod color_palette;
 mod app;
 
-fn delete_word(s: &mut String) -> String {
-    let new_len = s.len() -s.split(' ').last().unwrap().len();
-    s.truncate(new_len);
-    String::from(s.trim())
-}
-
 fn main() -> Result<(), Box<dyn Error>> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
@@ -82,15 +76,21 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: app::App) -> io::Res
                     // So this captures it separately and filters if Ctrl is pressed
                     KeyCode::Char('h') => {
                         if key.modifiers == KeyModifiers::CONTROL {
-                            app.input_box = delete_word(&mut app.input_box);
+                            app::App::delete_word(&mut app);
                         } else { app.input_box.push('h'); }
                     }
                     KeyCode::Char('w') => {
                         if key.modifiers == KeyModifiers::CONTROL {
-                            app.input_box = delete_word(&mut app.input_box);
-                        } else { app.input_box.push('h'); }
+                            app::App::delete_word(&mut app);
+                        } else { app.input_box.push('w'); }
                     }
-                    KeyCode::Char(c) => { app.input_box.push(c); }
+                    KeyCode::Char(c) => {
+                        if app.input_box.trim().len() == 0 && c == ' ' {
+                            app.input_box.pop();
+                        } else {
+                            app.input_box.push(c);
+                        }
+                    }
                     KeyCode::Backspace => { app.input_box.pop(); }
                     _ => {}
                 }
