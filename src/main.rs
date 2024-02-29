@@ -12,7 +12,6 @@ use crossterm::{
 };
 use std::{
     error::Error,
-    fmt,
     io,
 };
 use rand::{Rng};
@@ -25,34 +24,8 @@ use tui::{
 };
 use unicode_width::UnicodeWidthStr;
 
-enum Mode {
-    Normal,
-    Insert,
-}
-impl fmt::Display for Mode {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Mode::Normal => write!(f, "normal"),
-            Mode::Insert => write!(f, "insert"),
-        }
-    }
-}
-
-struct App {
-    mode: Mode,
-    input_box: String,
-    submission: String
-}
-
-impl Default for App {
-    fn default() -> App {
-        App {
-            mode: Mode::Normal,
-            input_box: String::new(),
-            submission: String::new(),
-        }
-    }
-}
+mod color_palette;
+mod app;
 
 fn delete_word(s: &mut String) -> String {
     let new_len = s.len() -s.split(' ').last().unwrap().len();
@@ -71,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let app = App::default();
+    let app = app::App::default();
     let res = run_app(&mut terminal, app);
 
     disable_raw_mode()?;
@@ -86,19 +59,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: App) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: app::App) -> io::Result<()> {
     loop {
         terminal.draw(|f| ui(f, &app))?;
         // Key bindings
         if let Event::Key(key) = event::read()? {
             match app.mode {
-                Mode::Normal => match key.code {
+                app::Mode::Normal => match key.code {
                     KeyCode::Char('q') => { return Ok(()); }
-                    KeyCode::Char('i') => { app.mode = Mode::Insert; }
+                    KeyCode::Char('i') => { app.mode = app::Mode::Insert; }
                     _ => {}
                 },
-                Mode::Insert => match key.code {
-                    KeyCode::Esc => { app.mode = Mode::Normal; }
+                app::Mode::Insert => match key.code {
+                    KeyCode::Esc => { app.mode = app::Mode::Normal; }
                     KeyCode::Enter => {
                         if !app.input_box.trim().is_empty(){
                             app.submission = String::from(&app.input_box);
@@ -126,9 +99,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: App) -> io::Result<(
     }
 }
 
-mod color_palette;
-
-fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
+fn ui<B: Backend>(f: &mut Frame<B>, app: &app::App) {
     // Layout
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -176,8 +147,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     f.render_widget(rbar, chunks[1]);
 
     match app.mode {
-        Mode::Normal => {}
-        Mode::Insert => {
+        app::Mode::Normal => {}
+        app::Mode::Insert => {
             f.set_cursor(
                 // Put the cursor past the end of the input text
                 chunks[2].x + app.input_box.width() as u16,
